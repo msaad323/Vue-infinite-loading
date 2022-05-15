@@ -71,7 +71,7 @@ export default {
   margin-top: 60px;
 }
 body {
-  /* background: url("https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?w=2000"); */
+  background: url("https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?w=2000");
   font-family: "Montserrat", sans-serif;
 }
 .post {
