@@ -61,7 +61,7 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 #app {
   /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
@@ -71,8 +71,8 @@ export default {
   margin-top: 60px;
 }
 body {
-  background: url("https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?w=2000");
-font-family: 'Montserrat', sans-serif;
+  /* background: url("https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?w=2000"); */
+  font-family: "Montserrat", sans-serif;
 }
 .post {
   background: #fff;
@@ -84,9 +84,9 @@ font-family: 'Montserrat', sans-serif;
 .post:not(:last-child) {
   border-bottom: 1px solid #ddd;
 }
-.post a{
+.post a {
   text-decoration: none;
-   color: #333;
+  color: #333;
 }
 .post h2 {
   width: 80%;
