@@ -1,62 +1,76 @@
 <template>
-  <div id="title" @click="refreshPage">
-    <h1>Y</h1>
-    <h2>Hacker News</h2>
-  </div>
-  <infinite-scroll
-    @infinite-scroll="loadDataFromServer"
-    :message="message"
-    :noResult="noResult"
-  >
-    <div v-for="item in list" :key="item.title" class="post">
-      <h3>
-        <a :href="item.url" target="_blank">{{ item.title }}</a>
-      </h3>
-      <p>~ {{ item.points }} points by {{ item.author }}</p>
+  <div class="container">
+    <div id="title" @click="refreshPage">
+      <h1>Y</h1>
+      <h2>Hacker News</h2>
     </div>
-    <!-- Place the content of your page here. E.g a list of resources being fetched from a server -->
-  </infinite-scroll>
+    <!-- <infinite-scroll
+    class="scroll-list"
+            @infinite-scroll="loadDataFromServer"
+            target="#top"
+            :message="message"
+            :noResult="noResult"
+          > -->
+
+    <div class="scroll-list" id="renderList">
+      <div v-for="(item, index) in list" :key="index" class="post">
+        <h3>
+          <a :href="item.url" target="_blank">{{ item.title }}</a>
+        </h3>
+        <p>~ {{ item.points }} points by {{ item.author }}</p>
+      </div>
+    </div>
+    <InfiniteLoading
+      top="true"
+      target="#renderList"
+      @infinite="loadDataFromServer"
+    />
+    <!-- </infinite-scroll> -->
+  </div>
 </template>
 
 <script>
 import axios from "axios";
-import InfiniteScroll from "infinite-loading-vue3";
+// import InfiniteScroll from "infinite-loading-vue3";
+import InfiniteLoading from "v3-infinite-loading";
 
 export default {
   name: "App",
   components: {
-    InfiniteScroll,
+    InfiniteLoading,
   },
   data() {
     return {
       list: [],
       page: 1,
-      message: "",
-      noResult: false,
     };
   },
   methods: {
-    async loadDataFromServer() {
+    async loadDataFromServer($state) {
       try {
         let article = await axios.get(
-          "//hn.algolia.com/api/v1/search_by_date?tags=story"
+          "//hn.algolia.com/api/v1/search_by_date?tags=story",
+          {
+            params: {
+              page: this.page,
+            },
+          }
         );
+        console.log;
         if (article.data.hits.length) {
+          this.page += 1;
           this.list.push(...article.data.hits);
-          this.page++;
+          $state.loaded();
         } else {
-          this.noResult = true;
-          this.message = "No result found";
+          $state.complete();
         }
       } catch (err) {
-        this.noResult = true;
-        this.message = "Error loading data";
-        console.error(err);
+        $state.error();
       }
     },
-    refreshPage() {
-      window.location.reload();
-    },
+    // refreshPage() {
+    //   window.location.reload();
+    // },
   },
   mounted() {
     this.loadDataFromServer();
@@ -72,10 +86,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 30px;
+  overflow-x: hidden;
+}
+.container {
+  width: 100vw;
 }
 #title {
   text-align: center;
+  /* margin: auto; */
   /* display: flex;
   justify-content: center;
   align-items: center;
@@ -87,6 +106,7 @@ export default {
   font-size: 2rem;
   color: #212f3c;
   margin-top: 0;
+  margin-bottom: 3rem;
 }
 #title h1,
 h2:hover {
@@ -94,7 +114,6 @@ h2:hover {
   /* -webkit-transition: all 1s ease;
   transition: all 1s ease; */
   /* transform: scale(1.2); */
-  
 }
 h1 {
   background: #a2d9ce;
@@ -118,9 +137,25 @@ h1 {
     transform: rotateY(-360deg);
   }
 }
+.scroll-list {
+  height: 60vh;
+  position: fixed;
+  overflow-y: scroll;
+  margin-bottom: 30px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  overflow-x: hidden;
+  /* display: flex;
+  flex-direction: column-reverse; */
+  /* bottom: 0; */
+  /* width: fit-content; */
+  /* scroll-behavior: revert; */
+}
+
 body {
   background: url("https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?w=2000");
   font-family: "Montserrat", sans-serif;
+  background-attachment: fixed;
 }
 .post {
   background: #fff;
@@ -130,10 +165,10 @@ body {
   /* transition: top ease 0.8s; */
 }
 .post:first-child {
-  border-radius: 10px 10px 0 0;
+  border-radius: 15px 0 0 0;
 }
 .post:last-child {
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 0 15px;
 }
 .post:not(:last-child) {
   border-bottom: 1px solid #ddd;
@@ -157,5 +192,8 @@ body {
 .post p {
   color: #888;
   text-align: right;
+}
+@media only screen and (max-width: 1200px) {
+  /*Tablets [601px -> 1200px]*/
 }
 </style>
